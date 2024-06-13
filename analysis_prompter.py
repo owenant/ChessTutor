@@ -4,71 +4,6 @@ from main_stockfish import StockFish
 import chess
 from IPython.display import display, clear_output
 
-# stockfish initialisation
-sf = StockFish(elo=1500)
-black_sf = StockFish(elo=1200)
-
-# create new game for python chess
-board = chess.Board()
-
-pgn = []
-while True:
-
-    display(board)
-    color = check_turn(pgn)
-    str_pgn = format_pgn(pgn)
-
-    # prompt = board_analysis_prompt(str_pgn, color)
-    fen = board.fen()
-    top_moves = sf.get_top_moves(fen)
-
-    # query chatgpt
-    board_prompt = board_analysis_prompt(str_pgn, color)
-    move_prompt = move_analysis_prompt(str_pgn, color, top_moves)
-
-    move_output = query_gpt(move_prompt)
-    board_output = extract_json(query_gpt(board_prompt))
-    # move_output = ''
-    # board_output = []
-
-    print("Here is an analysis of the board")
-    print(json.dumps(board_output, indent=4))
-    print("Here is some analysis of some potnetial moves")
-    print(move_output)
-
-    valid_move = False
-    while not valid_move:
-        player_move = input('Enter move: ')
-        try:
-            move = board.parse_san(player_move)
-            if move in board.legal_moves:
-                board.push(move)
-                pgn.append(player_move)
-
-                print(move)
-
-                valid_move = True
-            else:
-                print("This move is not legal. Please try again.")
-        except ValueError:
-            print("Invalid move format or the move is not legal. Please try again.")
-
-    # get FEN for updated board position
-    fen = board.fen()
-    # set stockfish position
-    # ask stockfish for top 3 moves
-    top_moves = black_sf.get_top_moves(fen, 1)
-
-    # apply top stock fish move and re-render board
-    stockfish_move = top_moves[0]
-    san = board.push_san(stockfish_move)
-    pgn.append(stockfish_move)
-    clear_output()
-    print(pgn)
-
-
-
-
 
 def get_pgn_from_board(game):
     pgn = []
@@ -101,7 +36,7 @@ def board_analysis_prompt(string_pgn, color):
     {pgn}
     {color} to move.
     
-    Provide an analysis of the board.
+    Provide a very short analysis of the board.
     Format the output with these sections:
     Material Balance
     King Safety
@@ -110,6 +45,7 @@ def board_analysis_prompt(string_pgn, color):
     Immediate Threats
     
     Only output your response into json format. DO NOT provide any other output.
+    Do not over explain, keep it as short as possible.
     """
 
     return input_prompt.format(pgn=string_pgn, color=color)
@@ -121,10 +57,11 @@ This is the state of a chess game.
 {pgn}
 {color} to move.
     
-Provide an analysis of the following potential moves for {color}.
+Provide a very short analysis of the following potential moves for {color}.
 {str_moves}
 
 Keep the analysis short for each move highlighting the most important aspects.
+Only write very briefly, keep it short.
 """
 
     return input_prompt.format(pgn=string_pgn, color=color, str_moves='\n'.join(moves))

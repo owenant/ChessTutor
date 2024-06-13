@@ -1,9 +1,8 @@
+import chess
+
 from config import STOCK_FISH_PATH
 from pgntofen import PgnToFen
 from stockfish import Stockfish
-
-
-
 
 def setup_board_state(pgnFormat):
     converter = PgnToFen()
@@ -16,13 +15,13 @@ def setup_board_state(pgnFormat):
 
 
 class StockFish:
-    def __init__(self):
+    def __init__(self, elo=3000):
         self.sf = Stockfish(path=STOCK_FISH_PATH)
-        self.sf.set_elo_rating(3000)
+        self.sf.set_elo_rating(elo)
 
-    def get_top_moves(self, FENString):
+    def get_top_moves(self, FENString, num_moves=3):
         self.sf.set_fen_position(FENString)
-        top_moves = self.sf.get_top_moves(3)
+        top_moves = self.sf.get_top_moves(num_moves)
         return [cm['Move'] for cm in top_moves]
 
 
@@ -36,6 +35,7 @@ if __name__ == "__main__":
     pgnFormat = 'e4 e5'
     fen = setup_board_state(pgnFormat)
     top_moves = sf.get_top_moves(fen)
+
 
 
 

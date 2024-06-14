@@ -701,7 +701,7 @@ def first_move_time(game: model.Game) -> chess.engine.Limit:
     :return: The time to choose the first move.
     """
     # Need to hardcode first movetime since Lichess has 30 sec limit.
-    search_time = seconds(10)
+    search_time = seconds(20)
     logger.info(f"Searching for time {sec_str(search_time)} seconds for game {game.id}")
     return chess.engine.Limit(time=to_seconds(search_time), clock_id="first move")
 

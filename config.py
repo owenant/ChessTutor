@@ -1,1 +1,0 @@
-STOCK_FISH_PATH = r"C:\Users\james.vanderpol\Documents\stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe"

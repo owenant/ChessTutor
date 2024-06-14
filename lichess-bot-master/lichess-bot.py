@@ -666,7 +666,7 @@ def play_game(li: LICHESS_TYPE,
                         setup_timer = Timer()
                         print_move_number(board)
                         move_attempted = True
-                        conversation.send_message('player','i made a move')
+
                         engine.play_move(board,
                                          game,
                                          li,
@@ -677,6 +677,15 @@ def play_game(li: LICHESS_TYPE,
                                          correspondence_move_time,
                                          engine_cfg,
                                          fake_think_time(config, board, game))
+                        
+                        conversation.send_message('player',"Here is an analysis of the board")
+                        num_board_msg = len(engine.board_output)//140+1
+                        for i in range(num_board_msg):
+                            conversation.send_message('player', engine.board_output[i*140:(i+1)*140])
+                        conversation.send_message('player', "Here is some analysis of some potential moves")
+                        num_move_msg = len(engine.move_output)//140+1
+                        for i in range(num_move_msg):
+                            conversation.send_message('player', engine.move_output[i*140:(i+1)*140])
                         time.sleep(to_seconds(delay))
                     elif is_game_over(game):
                         tell_user_game_result(game, board)

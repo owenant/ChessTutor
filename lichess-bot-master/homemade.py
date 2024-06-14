@@ -9,7 +9,17 @@ import random
 from lib.engine_wrapper import MinimalEngine
 from lib.types import MOVE, HOMEMADE_ARGS_TYPE
 import logging
-from stockfish import Stockfish
+from main_stockfish import StockFish
+# from analysis_prompter import *
+from pgntofen import PgnToFen
+from lib.types import (ReadableType, ChessDBMoveType, LichessEGTBMoveType, OPTIONS_GO_EGTB_TYPE, OPTIONS_TYPE,
+                       COMMANDS_TYPE, MOVE, InfoStrDict, InfoDictKeys, InfoDictValue, GO_COMMANDS_TYPE, EGTPATH_TYPE,
+                       ENGINE_INPUT_ARGS_TYPE, ENGINE_INPUT_KWARGS_TYPE)
+from typing import Optional, Union, TypedDict
+from lib.config import load_config, Configuration
+from lib import engine_wrapper, model, lichess, matchmaking
+from analysis_prompter import *
+import json
 
 
 
@@ -22,21 +32,75 @@ logger = logging.getLogger(__name__)
 class ExampleEngine(MinimalEngine):
     """An example engine that all homemade engines inherit."""
 
-    pass
+    def __init__(self, commands: COMMANDS_TYPE, options: OPTIONS_GO_EGTB_TYPE, stderr: Optional[int],
+                 draw_or_resign: Configuration, game: Optional[model.Game] = None, name: Optional[str] = None,
+                 **popen_args: str) -> None:
+        """
+        Initialize the values of the engine that all homemade engines inherit.
+
+        :param options: The options to send to the engine.
+        :param draw_or_resign: Options on whether the bot should resign or offer draws.
+        """
+        super().__init__(commands,options,stderr, draw_or_resign)
 
 
 # Bot names and ideas from tom7's excellent eloWorld video
 
-class RandomMove(ExampleEngine):
-    """Get a random move."""
+class AITutor(ExampleEngine):
+    """AI tutor, play a stockfish move and then propose top three Stockfish moves for the human player with GPT-4 explanations."""
+
+    def __init__(self, commands: COMMANDS_TYPE, options: OPTIONS_GO_EGTB_TYPE, stderr: Optional[int],
+                 draw_or_resign: Configuration, game: Optional[model.Game] = None, name: Optional[str] = None,
+                 **popen_args: str) -> None:
+        """
+        Initialize the values of the engine that all homemade engines inherit.
+
+        :param options: The options to send to the engine.
+        :param draw_or_resign: Options on whether the bot should resign or offer draws.
+        """
+        super().__init__(commands,options,stderr, draw_or_resign)
+        self.sf = StockFish(elo=3000)
+        self.pgn = []
+        self.first_move = True
+        self.color = check_turn(self.pgn)
+        self.str_pgn = format_pgn(self.pgn)
+        self.fen = ''
+        self.move_output = ''
+        self.board_output = ''
+        self.top_moves = []
+        self.internal_board = chess.Board()
+        
 
     def search(self, board: chess.Board, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
-        """Choose a random move."""
-        sf = Stockfish(path="..\\stockfish\\stockfish-windows-x86-64-avx2.exe")
-        sf.set_fen_position(board.board_fen())
-        move = sf.get_best_move()
+        """"""
+        #Make a move using stockfish
+        self.sf.sf.set_fen_position(board.board_fen())
+        move = self.sf.sf.get_best_move()
         move = chess.Move.from_uci(move)
-        print(move)
+        
+        self.pgn.append(self.internal_board.san(board.move_stack[-1]))
+        # print(self.internal_board.san(board.move_stack[-1]) )
+        self.internal_board.push(board.move_stack[-1])
+        self.pgn.append(self.internal_board.san(move))
+        board.push(move)
+        self.color = check_turn(self.pgn)
+        self.str_pgn = format_pgn(self.pgn)
+        # print(self.pgn)
+        # print(self.str_pgn)
+        # print(self.color)
+        
+        #Query Stockfish for the best moves the human player can make (according to stockfish) and store explanations for the moves using GPT-4
+        self.fen = board.fen()
+        self.top_moves = self.sf.get_top_moves(self.fen)
+        self.top_moves = [board.san(chess.Move.from_uci(move)) for move in self.top_moves]
+        board_prompt = board_analysis_prompt(self.str_pgn, self.color)
+        self.board_output = extract_json(query_gpt(board_prompt))
+        self.board_output = json.dumps(self.board_output, indent=4)
+        move_prompt = move_analysis_prompt(self.str_pgn, self.color, self.top_moves)
+        self.move_output = query_gpt(move_prompt)
+        
+        
+        #Actually make the move
         return PlayResult(move, None)
 
 

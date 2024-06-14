@@ -1,4 +1,4 @@
-**[Developing an AI tutor for boardgames]{.ul}**
+**[Developing an AI tutor for boardgames]**
 
 **Participants**
 
@@ -89,9 +89,7 @@ In our first example, Stockfish recommends the move f1d3, and the
 chatGPT analysis provides a number of correct insights, including the
 threatening of the pawn on h7, and providing the opportunity for
 castling in a future move. However, the commentary on taking the pawn
-after the move ![](media/image1.png){width="6.6929757217847765in"
-height="3.7997889326334207in"}![](media/image2.png){width="2.5208759842519686in"
-height="2.346208442694663in"}e4 is incorrect, since this would block the
+after the move e4 is incorrect, since this would block the
 capture by the bishop.
 
 **Example 2**
@@ -109,9 +107,7 @@ approaches for fixing this in our conclusion.
 Our final example shows that chatGPT is not able to reliably comment on
 moves that have a rationale based on a sequence of future moves. In this
 example, the sacrifice of the
-knigh![](media/image3.png){width="2.878267716535433in"
-height="2.5348950131233594in"}![](media/image4.png){width="2.7116010498687664in"
-height="2.3920188101487314in"}t on f3 sets white up for the moves Qa3
+knight on f3 sets white up for the moves Qa3
 placing the king in check and ultimately leading to a checkmate in the
 following move. This sequence is entirely missed by chatGPT.
 

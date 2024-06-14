@@ -1,4 +1,4 @@
-**[Developing an AI tutor for boardgames]**
+Developing an AI tutor for boardgames in a 2 day hackathon!
 
 **Participants**
 

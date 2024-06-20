@@ -77,6 +77,8 @@ with providing an analysis of material balance, king safety, pawn
 structure, immediate threats and a short analysis of the Stockfish
 moves.
 
+![Process Flow](./Images/ChessTutorProcessFlow.png)
+
 **Results**
 
 In order to assess the results we examined a number of examples with

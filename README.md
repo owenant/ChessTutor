@@ -113,21 +113,16 @@ following move. This sequence is entirely missed by chatGPT.
 
 **Conclusion and Future Work**
 
-In conclusion, this approach shows promise as chatGPT is able to provide
-commentary that in some instances is correct and insightful. However,
-there are a number of issues to be addressed including mis-understanding
-of the board state and lack of understanding on the potential for future
-moves and how they may impact the board state. A number of immediate
-improvements can be made which the authors expect would improve the
-quality of the commentary.
+In conclusion, this approach shows promise as chatGPT is able to provide commentary that in some instances is correct and insightful. However, there are a number of issues to be addressed including mis-understanding of the board state and lack of understanding on the potential for future moves and how they may impact the board state. A number of immediate improvements can be made which the authors expect would improve the quality of the commentary.
 
-Firstly, inputting the FEN string (which encapsulates the board state)
-in addition to the PGN into chatGPT should reduce instances of chatGPT
-hallucinating pieces. Additionally, using Stockfish to provide not just
-the best next move, but the expected best next moves to say 3 or 4 ply,
-would provide chatGPT with additional information on which to base a
-commentary on more advanced situations such as that seen in our third
-example.
+Firstly, inputting the FEN string (which encapsulates the board state) in addition to the PGN into chatGPT should reduce instances of chatGPT hallucinating pieces. Additionally, using Stockfish to provide not just the best next move, but the expected best next moves to say 3 or 4 ply, would provide chatGPT with additional information on which to base a commentary on more advanced situations such as that seen in our third example.
+
+Another possibility is to highlight ‘squares of interest’ to chatGPT, and ask it to comment specifically about the situation related to those squares. For example, if stockfish’s top recommendations all involve attacking a particular square then that should be highlighted to chatGPT. 
+
+Other possibilities include highlighting if the King can come under attack within the next few moves, if a move endangers another separate piece or whether two pieces are in danger of being forked. 
+
+Ultimately, the authors expect that fine tuning an LLM with annotated game play-throughs would help unlock the power of LLMs to support humans in interpreting the play of super-human AI agents.
+
 
 Ultimately, the authors expect that fine tuning an LLM with annotated
 game play throughs would help unlock the power of LLMs to support humans

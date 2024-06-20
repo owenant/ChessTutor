@@ -94,6 +94,8 @@ castling in a future move. However, the commentary on taking the pawn
 after the move e4 is incorrect, since this would block the
 capture by the bishop.
 
+![Example1](./Images/Example1.png)
+
 **Example 2**
 
 In our second example, the commentary from chatGPT is somewhat more
@@ -104,6 +106,8 @@ demonstrates that chatGPT does not necessarily understand the current
 state of the board given a history of moves. We will come back to
 approaches for fixing this in our conclusion.
 
+![Example2](./Images/Example2.png)
+
 **Example 3**
 
 Our final example shows that chatGPT is not able to reliably comment on
@@ -112,6 +116,8 @@ example, the sacrifice of the
 knight on f3 sets white up for the moves Qa3
 placing the king in check and ultimately leading to a checkmate in the
 following move. This sequence is entirely missed by chatGPT.
+
+![Example3](./Images/Example3.png)
 
 **Conclusion and Future Work**
 

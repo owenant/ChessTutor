@@ -1,4 +1,4 @@
-**[Developing an AI tutor for boardgames]{.ul}**
+Developing an AI tutor for boardgames in a 2 day hackathon!
 
 **Participants**
 
@@ -89,9 +89,7 @@ In our first example, Stockfish recommends the move f1d3, and the
 chatGPT analysis provides a number of correct insights, including the
 threatening of the pawn on h7, and providing the opportunity for
 castling in a future move. However, the commentary on taking the pawn
-after the move ![](media/image1.png){width="6.6929757217847765in"
-height="3.7997889326334207in"}![](media/image2.png){width="2.5208759842519686in"
-height="2.346208442694663in"}e4 is incorrect, since this would block the
+after the move e4 is incorrect, since this would block the
 capture by the bishop.
 
 **Example 2**
@@ -109,29 +107,22 @@ approaches for fixing this in our conclusion.
 Our final example shows that chatGPT is not able to reliably comment on
 moves that have a rationale based on a sequence of future moves. In this
 example, the sacrifice of the
-knigh![](media/image3.png){width="2.878267716535433in"
-height="2.5348950131233594in"}![](media/image4.png){width="2.7116010498687664in"
-height="2.3920188101487314in"}t on f3 sets white up for the moves Qa3
+knight on f3 sets white up for the moves Qa3
 placing the king in check and ultimately leading to a checkmate in the
 following move. This sequence is entirely missed by chatGPT.
 
 **Conclusion and Future Work**
 
-In conclusion, this approach shows promise as chatGPT is able to provide
-commentary that in some instances is correct and insightful. However,
-there are a number of issues to be addressed including mis-understanding
-of the board state and lack of understanding on the potential for future
-moves and how they may impact the board state. A number of immediate
-improvements can be made which the authors expect would improve the
-quality of the commentary.
+In conclusion, this approach shows promise as chatGPT is able to provide commentary that in some instances is correct and insightful. However, there are a number of issues to be addressed including mis-understanding of the board state and lack of understanding on the potential for future moves and how they may impact the board state. A number of immediate improvements can be made which the authors expect would improve the quality of the commentary.
 
-Firstly, inputting the FEN string (which encapsulates the board state)
-in addition to the PGN into chatGPT should reduce instances of chatGPT
-hallucinating pieces. Additionally, using Stockfish to provide not just
-the best next move, but the expected best next moves to say 3 or 4 ply,
-would provide chatGPT with additional information on which to base a
-commentary on more advanced situations such as that seen in our third
-example.
+Firstly, inputting the FEN string (which encapsulates the board state) in addition to the PGN into chatGPT should reduce instances of chatGPT hallucinating pieces. Additionally, using Stockfish to provide not just the best next move, but the expected best next moves to say 3 or 4 ply, would provide chatGPT with additional information on which to base a commentary on more advanced situations such as that seen in our third example.
+
+Another possibility is to highlight ‘squares of interest’ to chatGPT, and ask it to comment specifically about the situation related to those squares. For example, if stockfish’s top recommendations all involve attacking a particular square then that should be highlighted to chatGPT. 
+
+Other possibilities include highlighting if the King can come under attack within the next few moves, if a move endangers another separate piece or whether two pieces are in danger of being forked. 
+
+Ultimately, the authors expect that fine tuning an LLM with annotated game play-throughs would help unlock the power of LLMs to support humans in interpreting the play of super-human AI agents.
+
 
 Ultimately, the authors expect that fine tuning an LLM with annotated
 game play throughs would help unlock the power of LLMs to support humans
